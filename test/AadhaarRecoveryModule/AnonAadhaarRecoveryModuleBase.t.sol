@@ -35,7 +35,6 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
 
     function setUp() public virtual override {
         super.setUp();
-        console2.logUint(0);
 
         // Deploy validator to be recovered
         validator = new OwnableValidator();
@@ -50,8 +49,6 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             address(verifier)
         );
 
-        console2.logUint(2);
-
         // Deploy AnonAadhaarRecoveryManager & AnonAadhaarRecoveryModule
         bytes32 recoveryManagerSalt = bytes32(uint256(0));
         bytes32 recoveryModuleSalt = bytes32(uint256(0));
@@ -64,12 +61,10 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             validatorAddress,
             functionSelector
         );
-        console2.logUint(3);
+
         anonAadhaarRecoveryManager = AnonAadhaarRecoveryManager(
             anonAadhaarRecoveryManagerAddress
         );
-
-        console2.logUint(4);
 
         recoveryCalldata = abi.encodeWithSelector(functionSelector, newOwner);
         calldataHash = keccak256(recoveryCalldata);
@@ -83,8 +78,6 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             expiry
         );
 
-        console2.logUint(5);
-
         // Install modules for account 1
         instance.installModule({
             moduleTypeId: MODULE_TYPE_VALIDATOR,
@@ -92,14 +85,11 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             data: abi.encode(owner)
         });
 
-        console2.logUint(6);
         instance.installModule({
             moduleTypeId: MODULE_TYPE_EXECUTOR,
             module: recoveryModuleAddress,
             data: recoveryModuleInstallData
         });
-
-        console2.logUint(7);
     }
 
     function acceptGuardian(

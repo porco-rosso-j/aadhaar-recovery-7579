@@ -29,9 +29,9 @@ async function generateProofs() {
 	await init(anonAadhaarInitArgs);
 
 	for (let i = 0; i < 3; i++) {
-		// for (let j = 0; j < 2; j++) {
-		await generateProof(i, testData[i], certificate);
-		// }
+		for (let j = 0; j < 2; j++) {
+			await generateProof(i, testData[i], certificate);
+		}
 	}
 }
 
@@ -40,6 +40,7 @@ async function generateProof(
 	testQRData: string,
 	certificate: string
 ) {
+	//console.log("testQRData: ", testQRData);
 	const args = await generateArgs({
 		qrData: testQRData,
 		certificateFile: certificate,

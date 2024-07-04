@@ -40,20 +40,24 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
         assertEq(guardianStorage2.weight, uint256(2));
 
         // Accept guardian 3
-        acceptGuardian(accountAddress, guardians[2], guardian2proofData[0]);
-        GuardianStorage memory guardianStorage2 = anonAadhaarRecoveryManager
+        acceptGuardian(accountAddress, guardians[2], guardian3proofData[0]);
+        GuardianStorage memory guardianStorage3 = anonAadhaarRecoveryManager
             .getGuardian(accountAddress, guardians[2]);
         assertEq(
-            uint256(guardianStorage2.status),
+            uint256(guardianStorage3.status),
             uint256(GuardianStatus.ACCEPTED)
         );
-        assertEq(guardianStorage2.weight, uint256(1));
+        assertEq(guardianStorage3.weight, uint256(1));
+
+        console2.logString("handle recovery");
+        console2.logBytes32(calldataHash);
 
         // handle recovery request for guardian 1
         handleRecovery(
             accountAddress,
             guardians[0],
-            calldataHash,
+            // calldataHash,
+            bytes32(0),
             guardian1proofData[1]
         );
 
@@ -61,20 +65,21 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             uint executeAfter,
             uint executeBefore,
             uint currentWeight,
-            bytes32 calldataHash
+            bytes32 _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
 
         // assertEq(executeAfter, 0);
         // assertEq(executeBefore, 0);
         assertEq(currentWeight, 1);
 
-        // handle recovery request for guardian 2
         // uint _executeAfter = block.timestamp + delay;
         // uint _executeBefore = block.timestamp + expiry;
+
+        // handle recovery request for guardian 2
         handleRecovery(
             accountAddress,
             guardians[1],
-            calldataHash,
+            bytes32(0),
             guardian2proofData[1]
         );
 
@@ -82,24 +87,25 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             executeAfter,
             executeBefore,
             currentWeight,
-            calldataHash
+            _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
         // assertEq(executeAfter, executeAfter);
         // assertEq(executeBefore, executeBefore);
         assertEq(currentWeight, 3);
 
+        // handle recovery request for guardian 3
         handleRecovery(
             accountAddress,
             guardians[2],
             calldataHash,
-            guardian2proofData[1]
+            guardian3proofData[1]
         );
 
         (
             executeAfter,
             executeBefore,
             currentWeight,
-            calldataHash
+            _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
         // assertEq(executeAfter, executeAfter);
         // assertEq(executeBefore, executeBefore);
@@ -118,7 +124,7 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             executeAfter,
             executeBefore,
             currentWeight,
-            calldataHash
+            _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
 
         address updatedOwner = validator.owners(accountAddress);
@@ -128,19 +134,4 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
         assertEq(currentWeight, 0);
         assertEq(updatedOwner, newOwner);
     }
-
-    // // Helper function
-    // function executeRecoveryFlowForAccount(
-    //     address account,
-    //     bytes32 calldataHash,
-    //     bytes memory recoveryCalldata
-    // ) internal {
-    //     acceptGuardian(account, guardians[0]);
-    //     acceptGuardian(account, guardians[1]);
-    //     vm.warp(block.timestamp + 12 seconds);
-    //     handleRecovery(account, guardians[0], calldataHash);
-    //     handleRecovery(account, guardians[1], calldataHash);
-    //     vm.warp(block.timestamp + delay);
-    //     anonAadhaarRecoveryManager.completeRecovery(account, recoveryCalldata);
-    // }
 }

@@ -39,10 +39,7 @@ abstract contract IntegrationBase is RhinestoneModuleKit, Test, Inputs {
         15134874015316324267425466444584014077184337590635665158241104437045239495873;
 
     function setUp() public virtual {
-        console2.logUint(0);
         init();
-
-        console2.logUint(1);
 
         // Create ZK Email contracts
         vm.startPrank(anonAadhaarDeployer);
@@ -52,8 +49,6 @@ abstract contract IntegrationBase is RhinestoneModuleKit, Test, Inputs {
             anonAadhaaTestPubKeyHash
         );
         vm.stopPrank();
-
-        console2.logUint(2);
 
         // create owners
         owner = vm.createWallet("owner").addr;
@@ -65,21 +60,14 @@ abstract contract IntegrationBase is RhinestoneModuleKit, Test, Inputs {
 
         accountSalt = keccak256(abi.encode("account salt"));
 
-        console2.logUint(3);
-
         // Compute guardian addresses
         guardians = new uint256[](3);
-        // guardians[0] = guardianHash1;
-        // guardians[1] = guardianHash2;
-        // guardians[2] = guardianHash3;
-        // guardians = new uint256[](1);
         guardians[0] = guardianHash1;
         guardians[1] = guardianHash2;
         guardians[2] = guardianHash3;
 
         // Set recovery config variables
         guardianWeights = new uint256[](3);
-        // guardianWeights = new uint256[](1);
         guardianWeights[0] = 1;
         guardianWeights[1] = 2;
         guardianWeights[2] = 1;

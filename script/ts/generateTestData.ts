@@ -133,12 +133,13 @@ export const createCustomV2TestData = ({
 			Array.from(modifiedSignedData),
 			modifiedSignedData.length
 		);
+		const photoLength = dataLength - begin;
 
 		modifiedSignedData = replaceBytesBetween(
 			modifiedSignedData,
-			crypto.randomBytes(dataLength),
+			crypto.randomBytes(photoLength - 1),
 			begin + 1,
-			begin + 1 + dataLength
+			begin + photoLength - 1
 		);
 	}
 

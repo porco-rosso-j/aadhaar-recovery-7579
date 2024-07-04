@@ -13,10 +13,10 @@ export async function copmuteUserNullifier(
 	qrData: string
 ): Promise<bigint> {
 	const qrDataBytes = convertBigIntToByteArray(BigInt(qrData));
-	console.log("qrDataBytes: ", qrDataBytes);
+	// console.log("qrDataBytes: ", qrDataBytes);
 
 	const decodedData = decompressByteArray(qrDataBytes);
-	console.log("decodedData: ", decodedData);
+	// console.log("decodedData: ", decodedData);
 
 	const signedData = decodedData.slice(0, decodedData.length - 256);
 	const [qrDataPadded, qrDataPaddedLen] = sha256Pad(signedData, 512 * 3);
