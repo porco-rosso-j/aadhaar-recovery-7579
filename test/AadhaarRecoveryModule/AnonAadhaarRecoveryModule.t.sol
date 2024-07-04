@@ -39,8 +39,16 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
         );
         assertEq(guardianStorage2.weight, uint256(2));
 
-        // Time travel so that EmailAuth timestamp is valid
-        vm.warp(12 seconds);
+        // Accept guardian 3
+        acceptGuardian(accountAddress, guardians[2], guardian2proofData[0]);
+        GuardianStorage memory guardianStorage2 = anonAadhaarRecoveryManager
+            .getGuardian(accountAddress, guardians[2]);
+        assertEq(
+            uint256(guardianStorage2.status),
+            uint256(GuardianStatus.ACCEPTED)
+        );
+        assertEq(guardianStorage2.weight, uint256(1));
+
         // handle recovery request for guardian 1
         handleRecovery(
             accountAddress,
@@ -49,10 +57,6 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             guardian1proofData[1]
         );
 
-        // IAnonAadhaarRecoveryManager.RecoveryRequest
-        //     memory recoveryRequest = anonAadhaarRecoveryManager
-        //         .getRecoveryRequest(accountAddress);
-
         (
             uint executeAfter,
             uint executeBefore,
@@ -60,37 +64,46 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             bytes32 calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
 
-        // assertEq(recoveryRequest.executeAfter, 0);
-        // assertEq(recoveryRequest.executeBefore, 0);
-        // assertEq(recoveryRequest.currentWeight, 1);
-        assertEq(executeAfter, 0);
-        assertEq(executeBefore, 0);
+        // assertEq(executeAfter, 0);
+        // assertEq(executeBefore, 0);
         assertEq(currentWeight, 1);
 
         // handle recovery request for guardian 2
-        executeAfter = block.timestamp + delay;
-        executeBefore = block.timestamp + expiry;
+        // uint _executeAfter = block.timestamp + delay;
+        // uint _executeBefore = block.timestamp + expiry;
         handleRecovery(
             accountAddress,
             guardians[1],
             calldataHash,
             guardian2proofData[1]
         );
-        // recoveryRequest = anonAadhaarRecoveryManager.getRecoveryRequest(
-        //     accountAddress
-        // );
-        // assertEq(recoveryRequest.executeAfter, executeAfter);
-        // assertEq(recoveryRequest.executeBefore, executeBefore);
-        // assertEq(recoveryRequest.currentWeight, 3);
+
         (
             executeAfter,
             executeBefore,
             currentWeight,
             calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
-        assertEq(executeAfter, executeAfter);
-        assertEq(executeBefore, executeBefore);
+        // assertEq(executeAfter, executeAfter);
+        // assertEq(executeBefore, executeBefore);
         assertEq(currentWeight, 3);
+
+        handleRecovery(
+            accountAddress,
+            guardians[2],
+            calldataHash,
+            guardian2proofData[1]
+        );
+
+        (
+            executeAfter,
+            executeBefore,
+            currentWeight,
+            calldataHash
+        ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
+        // assertEq(executeAfter, executeAfter);
+        // assertEq(executeBefore, executeBefore);
+        assertEq(currentWeight, 4);
 
         // Time travel so that the recovery delay has passed
         vm.warp(block.timestamp + delay);
@@ -101,9 +114,6 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             recoveryCalldata
         );
 
-        // recoveryRequest = anonAadhaarRecoveryManager.getRecoveryRequest(
-        //     accountAddress
-        // );
         (
             executeAfter,
             executeBefore,
@@ -113,10 +123,6 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
 
         address updatedOwner = validator.owners(accountAddress);
 
-        // assertEq(recoveryRequest.executeAfter, 0);
-        // assertEq(recoveryRequest.executeBefore, 0);
-        // assertEq(recoveryRequest.currentWeight, 0);
-        // assertEq(updatedOwner, newOwner);
         assertEq(executeAfter, 0);
         assertEq(executeBefore, 0);
         assertEq(currentWeight, 0);

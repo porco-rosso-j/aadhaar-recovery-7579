@@ -9,11 +9,9 @@ import {AnonAadhaarRecoveryFactory} from "src/AnonAadhaarRecoveryFactory.sol";
 import {AnonAadhaarRecoveryManager} from "src/AnonAadhaarRecoveryManager.sol";
 import {OwnableValidator} from "src/test/OwnableValidator.sol";
 import {IntegrationBase} from "../IntegrationBase.t.sol";
-import {Inputs} from "../Inputs.sol";
 
 abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
-    IntegrationBase,
-    Inputs
+    IntegrationBase
 {
     using ModuleKitHelpers for *;
     using ModuleKitUserOp for *;
@@ -37,6 +35,7 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
 
     function setUp() public virtual override {
         super.setUp();
+        console2.logUint(0);
 
         // Deploy validator to be recovered
         validator = new OwnableValidator();
@@ -44,10 +43,14 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
         isInstalledContext = bytes("0");
         functionSelector = bytes4(keccak256(bytes("changeOwner(address)")));
 
+        console2.logUint(1);
+
         anonAadhaarRecoveryFactory = new AnonAadhaarRecoveryFactory(
             address(anonAadhaar),
             address(verifier)
         );
+
+        console2.logUint(2);
 
         // Deploy AnonAadhaarRecoveryManager & AnonAadhaarRecoveryModule
         bytes32 recoveryManagerSalt = bytes32(uint256(0));
@@ -61,18 +64,15 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             validatorAddress,
             functionSelector
         );
+        console2.logUint(3);
         anonAadhaarRecoveryManager = AnonAadhaarRecoveryManager(
             anonAadhaarRecoveryManagerAddress
         );
 
+        console2.logUint(4);
+
         recoveryCalldata = abi.encodeWithSelector(functionSelector, newOwner);
         calldataHash = keccak256(recoveryCalldata);
-
-        // Compute guardian addresses
-        guardians = new uint256[](3);
-        guardians[0] = guardianHash1;
-        guardians[1] = guardianHash2;
-        guardians[2] = guardianHash3;
 
         bytes memory recoveryModuleInstallData = abi.encode(
             isInstalledContext,
@@ -83,17 +83,23 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
             expiry
         );
 
+        console2.logUint(5);
+
         // Install modules for account 1
         instance.installModule({
             moduleTypeId: MODULE_TYPE_VALIDATOR,
             module: validatorAddress,
             data: abi.encode(owner)
         });
+
+        console2.logUint(6);
         instance.installModule({
             moduleTypeId: MODULE_TYPE_EXECUTOR,
             module: recoveryModuleAddress,
             data: recoveryModuleInstallData
         });
+
+        console2.logUint(7);
     }
 
     function acceptGuardian(

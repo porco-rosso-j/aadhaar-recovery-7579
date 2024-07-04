@@ -14,7 +14,7 @@ contract AnonAadhaarRecoveryFactory {
         address anonAadhaarRecoveryManager
     );
 
-    constructor(address _verifier, address _anonAadhaar) {
+    constructor(address _anonAadhaar, address _verifier) {
         anonAadhaar = _anonAadhaar;
         verifier = _verifier;
     }
