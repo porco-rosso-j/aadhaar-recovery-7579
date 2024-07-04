@@ -94,6 +94,7 @@ interface IAnonAadhaarRecoveryManager {
     error DuplicatedNullifier();
     error InvalidProof();
     error NullifierAlreadyUsed();
+    error InvalidNewOnwerAddress();
 
     /*//////////////////////////////////////////////////////////////////////////
                                     FUNCTIONS

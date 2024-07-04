@@ -6,36 +6,51 @@ import {AnonAadhaarRecoveryManager} from "./AnonAadhaarRecoveryManager.sol";
 import {AnonAadhaarRecoveryModule} from "./modules/AnonAadhaarRecoveryModule.sol";
 
 contract AnonAadhaarRecoveryFactory {
-    function deployAll(
+    address public immutable anonAadhaar;
+    address public immutable verifier;
+
+    event AnonAadhaarRecoveryModuleDeployed(
+        address anonAadhaarRecoveryModule,
+        address anonAadhaarRecoveryManager
+    );
+
+    constructor(address _verifier, address _anonAadhaar) {
+        anonAadhaar = _anonAadhaar;
+        verifier = _verifier;
+    }
+
+    function deployAnonAadhaarRecoveryModule(
         bytes32 recoveryManagerSalt,
         bytes32 recoveryModuleSalt,
-        address anonAadhaar,
-        address relayer,
         address validator,
         bytes4 functionSelector
     ) external returns (address, address) {
         // Deploy recovery manager
-        AnonAadhaarRecoveryManager anonAadhaarRecoveryManager = new AnonAadhaarRecoveryManager{
-                salt: recoveryManagerSalt
-            }(anonAadhaar, relayer);
-        address anonAadhaarRecoveryManagerAddress = address(
-            anonAadhaarRecoveryManager
+        address anonAadhaarRecoveryManager = address(
+            new AnonAadhaarRecoveryManager{salt: recoveryManagerSalt}(
+                anonAadhaar,
+                verifier
+            )
         );
 
         // Deploy recovery module
-        AnonAadhaarRecoveryModule anonAadhaarRecoveryModule = new AnonAadhaarRecoveryModule{
-                salt: recoveryModuleSalt
-            }(anonAadhaarRecoveryManagerAddress, validator, functionSelector);
-        address anonAadhaarRecoveryModuleAddress = address(
-            anonAadhaarRecoveryModule
+        address anonAadhaarRecoveryModule = address(
+            new AnonAadhaarRecoveryModule{salt: recoveryModuleSalt}(
+                anonAadhaarRecoveryManager,
+                validator,
+                functionSelector
+            )
         );
 
         // Initialize recovery manager with module address
-        anonAadhaarRecoveryManager.initialize(anonAadhaarRecoveryModuleAddress);
-
-        return (
-            anonAadhaarRecoveryManagerAddress,
-            anonAadhaarRecoveryModuleAddress
+        AnonAadhaarRecoveryManager(anonAadhaarRecoveryManager).initialize(
+            anonAadhaarRecoveryModule
         );
+        emit AnonAadhaarRecoveryModuleDeployed(
+            anonAadhaarRecoveryModule,
+            anonAadhaarRecoveryManager
+        );
+
+        return (anonAadhaarRecoveryModule, anonAadhaarRecoveryManager);
     }
 }

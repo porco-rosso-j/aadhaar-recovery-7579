@@ -305,10 +305,9 @@ contract AnonAadhaarRecoveryManager is
     function handleRecovery(
         address account,
         uint guardian,
-        bytes memory proofData,
-        bytes32 calldataHash  // TODO: how to get bytes32 calldataHash...?
+        bytes32 calldataHash,
+        bytes memory proofData
     ) external {
-
         if (
             !IAnonAadhaarRecoveryModule(anonAadhaarRecoveryModule)
                 .isAuthorizedToRecover(account)
@@ -336,7 +335,7 @@ contract AnonAadhaarRecoveryManager is
         if (recoveryRequest.usedNullifiers[nullifier]) {
             revert NullifierAlreadyUsed();
         }
-        
+
         recoveryRequest.currentWeight += guardianStorage.weight;
 
         uint256 threshold = guardianConfigs[account].threshold;
