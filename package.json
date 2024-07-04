@@ -1,0 +1,70 @@
+{
+    "name": "anon-aadhaar-recovery",
+    "version": "0.4.1",
+    "description": "A Foundry template for building modules using the ModuleKit",
+    "license": "GPL-3.0",
+    "author": {
+        "name": "Rhinestone",
+        "url": "https://rhinestone.wtf"
+    },
+    "scripts": {
+        "build": "forge build",
+        "clean": "rm -rf artifacts broadcast cache docs out out-optimized out-svg",
+        "gas:report": "forge test --gas-report --mp \"./test/integration/**/*.sol\" --nmt \"test(Fuzz)?_RevertWhen_\\w{1,}?\"",
+        "gas:snapshot": "forge snapshot --mp \"./test/integration/**/*.sol\" --nmt \"test(Fuzz)?_RevertWhen_\\w{1,}?\"",
+        "gas:snapshot:optimized": "pnpm run build:optimized && FOUNDRY_PROFILE=test-optimized forge snapshot --mp \"./test/integration/**/*.sol\" --nmt \"test(Fork)?(Fuzz)?_RevertWhen_\\w{1,}?\"",
+        "lint": "pnpm run lint:sol && bun run prettier:check",
+        "lint:sol": "forge fmt --check && pnpm solhint \"{script,src,test}/**/*.sol\"",
+        "prepack": "pnpm install && bash ./shell/prepare-artifacts.sh",
+        "prettier:check": "prettier --check \"**/*.{json,md,svg,yml}\"",
+        "prettier:write": "prettier --write \"**/*.{json,md,svg,yml}\"",
+        "test": "forge test",
+        "test:lite": "FOUNDRY_PROFILE=lite forge test",
+        "test:optimized": "pnpm run build:optimized && FOUNDRY_PROFILE=test-optimized forge test"
+    },
+    "dependencies": {
+        "@openzeppelin/contracts-upgradeable": "v5.0.1",
+        "@anon-aadhaar/contracts": "2.2.0",
+        "@anon-aadhaar/core": "2.2.0",
+        "@rhinestone/modulekit": "github:rhinestonewtf/modulekit",
+        "erc7579-implementation": "https://github.com/erc7579/erc7579-implementation.git",
+        "solidity-stringutils": "https://github.com/Arachnid/solidity-stringutils.git",
+        "@types/chai": "^4.2.0",
+        "@types/circomlibjs": "^0.1.6",
+        "@types/mocha": ">=9.1.0",
+        "@types/node": ">=16.0.0",
+        "@zk-email/helpers": "^6.1.1",
+        "chai": "^4.2.0",
+        "circomlibjs": "0.1.7",
+        "dotenv": "^16.3.1",
+        "ethers": "^6.4.0",
+        "hardhat": "^2.17.1",
+        "ts-node": ">=8.0.0",
+        "typechain": "^8.1.0",
+        "typescript": "^5.4.3"
+    },
+    "files": [
+        "src",
+        "test",
+        "script",
+        "package.json",
+        "foundry.toml",
+        "remappings.txt"
+    ],
+    "homepage": "https://docs.rhinestone.wtf/module-template",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rhinestonewtf/module-template.git"
+    },
+    "bugs": {
+        "url": "https://github.com/rhinestonewtf/module-template/issues"
+    },
+    "keywords": [
+        "account abstraction",
+        "smart account modules",
+        "module template"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
+}
