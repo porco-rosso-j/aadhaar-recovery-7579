@@ -273,7 +273,7 @@ contract AnonAadhaarRecoveryManager is
             );
         }
 
-        if (!verifyProofData(guardian, proofData)) {
+        if (!verifyProofData(guardian, bytes32(0), proofData)) {
             revert InvalidProof();
         }
 
@@ -311,7 +311,7 @@ contract AnonAadhaarRecoveryManager is
         }
 
         // TODO: calldataHash as signal
-        if (!verifyProofData(guardian, proofData)) {
+        if (!verifyProofData(guardian, calldataHash, proofData)) {
             revert InvalidProof();
         }
 
@@ -416,31 +416,30 @@ contract AnonAadhaarRecoveryManager is
 
     function verifyProofData(
         uint guardian,
+        bytes32 calldataHash,
         bytes memory proofData
     ) internal returns (bool) {
         (
             uint256 nullifierSeed,
             uint256 timestamp,
-            uint256 signal,
             uint[4] memory revealArray,
             uint[8] memory groth16Proof
-        ) = abi.decode(proofData, (uint, uint, uint, uint[4], uint[8]));
+        ) = abi.decode(proofData, (uint, uint, uint[4], uint[8]));
 
-        // TODO: check proof nullifier
+        uint256 convertedCalldataHash = uint256(calldataHash);
 
         if (
             !IAnonAadhaar(anonAadhaarAddr).verifyAnonAadhaarProof(
                 nullifierSeed,
                 guardian,
                 timestamp,
-                signal,
+                convertedCalldataHash, // recovery calldata bound to proof
                 revealArray,
                 groth16Proof
             )
         ) {
             return false;
         } else {
-            // TODO: store proof nullifier
             return true;
         }
     }
