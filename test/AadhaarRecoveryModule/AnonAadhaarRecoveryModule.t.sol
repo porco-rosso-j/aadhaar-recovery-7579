@@ -49,14 +49,10 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
         );
         assertEq(guardianStorage3.weight, uint256(1));
 
-        console2.logString("handle recovery");
-        console2.logBytes32(calldataHash);
-
         // handle recovery request for guardian 1
         handleRecovery(
             accountAddress,
             guardians[0],
-            // calldataHash,
             bytes32(0),
             guardian1proofData[1]
         );
@@ -68,12 +64,9 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             bytes32 _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
 
-        // assertEq(executeAfter, 0);
-        // assertEq(executeBefore, 0);
+        assertEq(executeAfter, 0);
+        assertEq(executeBefore, 0);
         assertEq(currentWeight, 1);
-
-        // uint _executeAfter = block.timestamp + delay;
-        // uint _executeBefore = block.timestamp + expiry;
 
         // handle recovery request for guardian 2
         handleRecovery(
@@ -89,9 +82,12 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             currentWeight,
             _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
-        // assertEq(executeAfter, executeAfter);
-        // assertEq(executeBefore, executeBefore);
+        assertEq(executeAfter, 0);
+        assertEq(executeBefore, 0);
         assertEq(currentWeight, 3);
+
+        uint _executeAfter = block.timestamp + delay;
+        uint _executeBefore = block.timestamp + expiry;
 
         // handle recovery request for guardian 3
         handleRecovery(
@@ -107,8 +103,8 @@ contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Integration_Test is
             currentWeight,
             _calldataHash
         ) = anonAadhaarRecoveryManager.getRecoveryRequest(accountAddress);
-        // assertEq(executeAfter, executeAfter);
-        // assertEq(executeBefore, executeBefore);
+        assertEq(executeAfter, _executeAfter);
+        assertEq(executeBefore, _executeBefore);
         assertEq(currentWeight, 4);
 
         // Time travel so that the recovery delay has passed

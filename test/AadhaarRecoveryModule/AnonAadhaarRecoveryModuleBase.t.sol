@@ -42,8 +42,6 @@ abstract contract OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base is
         isInstalledContext = bytes("0");
         functionSelector = bytes4(keccak256(bytes("changeOwner(address)")));
 
-        console2.logUint(1);
-
         anonAadhaarRecoveryFactory = new AnonAadhaarRecoveryFactory(
             address(anonAadhaar),
             address(verifier)

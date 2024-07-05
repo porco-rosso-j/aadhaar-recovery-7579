@@ -134,11 +134,6 @@ contract AnonAadhaarRecoveryManager is
      * retrieved
      * @return RecoveryRequest The recovery request details for the specified account
      */
-    // function getRecoveryRequest(
-    //     address account
-    // ) external view returns (RecoveryRequest memory) {
-    //     return recoveryRequests[account];
-    // }
     function getRecoveryRequest(
         address account
     ) external view returns (uint, uint, uint, bytes32) {
@@ -315,6 +310,7 @@ contract AnonAadhaarRecoveryManager is
             revert RecoveryModuleNotAuthorized();
         }
 
+        // TODO: calldataHash as signal
         if (!verifyProofData(guardian, proofData)) {
             revert InvalidProof();
         }
@@ -331,9 +327,13 @@ contract AnonAadhaarRecoveryManager is
 
         RecoveryRequest storage recoveryRequest = recoveryRequests[account];
 
+        // Check if the same proof has been already used to vote for this recovery
+        // If not, nullifiy it in usedNullifiers mapping.
         bytes32 nullifier = keccak256(abi.encodePacked(proofData));
         if (recoveryRequest.usedNullifiers[nullifier]) {
             revert NullifierAlreadyUsed();
+        } else {
+            recoveryRequest.usedNullifiers[nullifier] = true;
         }
 
         recoveryRequest.currentWeight += guardianStorage.weight;
