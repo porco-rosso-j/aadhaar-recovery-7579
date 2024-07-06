@@ -3,13 +3,19 @@ pragma solidity ^0.8.25;
 
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
+enum ValidatorType {
+    K256,
+    AADHAAR,
+    EMAIL,
+    P256
+}
+
 /**
  * A struct representing the values required for a guardian
  */
 struct GuardianStorage {
     GuardianStatus status;
     uint256 weight;
-    // ValidatorType validatorType; 
 }
 
 /**
@@ -33,7 +39,7 @@ enum GuardianStatus {
  * each function
  */
 library EnumerableGuardianMap {
-    using EnumerableSet for EnumerableSet.UintSet;
+    using EnumerableSet for EnumerableSet.AddressSet;
 
     /**
      * Maximum number of guardians that can be added
@@ -43,10 +49,10 @@ library EnumerableGuardianMap {
     error MaxNumberOfGuardiansReached();
     error TooManyValuesToRemove();
 
-    // struct AddressToGuardianMap {
-    struct UintToGuardianMap {
-        EnumerableSet.UintSet _keys;
-        mapping(uint key => GuardianStorage) _values;
+    struct AddressToGuardianMap {
+        // Storage of keys
+        EnumerableSet.AddressSet _keys;
+        mapping(address key => GuardianStorage) _values;
     }
 
     /**
@@ -61,8 +67,8 @@ library EnumerableGuardianMap {
      * This prevents the library having unbounded costs when clearing up state
      */
     function set(
-        UintToGuardianMap storage map,
-        uint key,
+        AddressToGuardianMap storage map,
+        address key,
         GuardianStorage memory value
     ) internal returns (bool) {
         uint256 length = map._keys.length();
@@ -79,8 +85,8 @@ library EnumerableGuardianMap {
      * Returns true if the key was removed from the map, that is if it was present.
      */
     function remove(
-        UintToGuardianMap storage map,
-        uint key
+        AddressToGuardianMap storage map,
+        address key
     ) internal returns (bool) {
         delete map._values[key];
         return map._keys.remove(key);
@@ -89,14 +95,12 @@ library EnumerableGuardianMap {
     /**
      * @dev Removes all key-value pairs from a map. O(n) where n <= 32
      *
-     * Returns true if the key was removed from the map, that is if it was present.
-     *
      * @custom:modification This is a new function that did not exist on the
      * original Open Zeppelin library.
      */
     function removeAll(
-        UintToGuardianMap storage map,
-        uint[] memory guardianKeys
+        AddressToGuardianMap storage map,
+        address[] memory guardianKeys
     ) internal {
         if (guardianKeys.length > MAX_NUMBER_OF_GUARDIANS) {
             revert TooManyValuesToRemove();
@@ -118,8 +122,8 @@ library EnumerableGuardianMap {
      * default solidity values
      */
     function get(
-        UintToGuardianMap storage map,
-        uint key
+        AddressToGuardianMap storage map,
+        address key
     ) internal view returns (GuardianStorage memory) {
         return map._values[key];
     }
@@ -131,8 +135,8 @@ library EnumerableGuardianMap {
      * be quite expensive.
      */
     function keys(
-        UintToGuardianMap storage map
-    ) internal view returns (uint[] memory) {
+        AddressToGuardianMap storage map
+    ) internal view returns (address[] memory) {
         return map._keys.values();
     }
 }
