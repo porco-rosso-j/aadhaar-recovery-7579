@@ -19,6 +19,13 @@ The way it works without guardians as neither EOAs nor contracts is to use relay
 
 This social recovery module allows guardians to choose any supported recovery validators. Currently, it supports `EcdsaValidator` and `AnonAadhaarValidator` as a PoC, but, in theory, it can also adapt many more validators that provide other signature validation schemes including zk proofs verification, such as passkey, Eddsa, zkEmail, Myna, etc...
 
+
+<p align="center">
+  <img width="600" alt="Screenshot 2024-07-07 at 18 39 08" src="https://github.com/porco-rosso-j/aadhaar-recovery-7579/assets/88586592/a873e527-be3f-4707-b70d-721ccc55c048">
+</p>
+
+
+
 ### Anon Aadhaar
 
 [Anon Aadhaar](https://github.com/anon-aadhaar/anon-aadhaar) is a zero-knowledge protocol that allows Aadhaar ID owners to prove their identity in a privacy-preserving way. It provides a set of tools to generate and verify proofs, authenticate users and verify proofs on-chain.
