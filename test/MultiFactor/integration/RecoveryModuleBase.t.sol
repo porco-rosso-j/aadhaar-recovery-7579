@@ -5,10 +5,10 @@ import {console2} from "forge-std/console2.sol";
 import {ModuleKitHelpers, ModuleKitUserOp} from "modulekit/ModuleKit.sol";
 import {MODULE_TYPE_EXECUTOR, MODULE_TYPE_VALIDATOR} from "modulekit/external/ERC7579.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {RecoveryFactory} from "src/universal/RecoveryFactory.sol";
-import {RecoveryManager} from "src/universal/RecoveryManager.sol";
-import {EcdsaValidator} from "src/universal/validators/EcdsaValidator.sol";
-import {AnonAadhaarValidator} from "src/universal/validators/AnonAadhaarValidator.sol";
+import {RecoveryFactory} from "src/multi-factor/RecoveryFactory.sol";
+import {RecoveryManager} from "src/multi-factor/RecoveryManager.sol";
+import {EcdsaValidator} from "src/multi-factor/validators/EcdsaValidator.sol";
+import {AnonAadhaarValidator} from "src/multi-factor/validators/AnonAadhaarValidator.sol";
 import {OwnableValidator} from "src/test/OwnableValidator.sol";
 
 import {IntegrationBase} from "../IntegrationBase.t.sol";

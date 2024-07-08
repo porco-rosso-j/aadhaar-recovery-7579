@@ -30,7 +30,6 @@ abstract contract IntegrationBase is RhinestoneModuleKit, Test, Inputs {
     uint256 delay;
     uint256 expiry;
     uint256 threshold;
-    uint256 templateIdx;
 
     // for ecdsa sign
     uint[] guardianPrivatekeys;
@@ -96,13 +95,13 @@ abstract contract IntegrationBase is RhinestoneModuleKit, Test, Inputs {
         // Set recovery config variables
         guardianWeights = new uint[](3);
         guardianWeights[0] = 1;
-        guardianWeights[1] = 2;
+        guardianWeights[1] = 1;
         guardianWeights[2] = 1;
 
-        totalWeight = 4;
+        totalWeight = 3;
         delay = 1 seconds;
         expiry = 2 weeks;
 
-        threshold = 4;
+        threshold = 3;
     }
 }

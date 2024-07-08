@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
-import "src/universal/validators/EcdsaValidator.sol";
+import "src/multi-factor/validators/EcdsaValidator.sol";
 import {ECDSA} from "solady/utils/ECDSA.sol";
 
 contract EcdsaValidatorTest is Test {

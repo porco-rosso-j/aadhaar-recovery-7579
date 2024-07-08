@@ -5,8 +5,8 @@ import {console2} from "forge-std/console2.sol";
 import {ModuleKitHelpers, ModuleKitUserOp} from "modulekit/ModuleKit.sol";
 import {MODULE_TYPE_EXECUTOR, MODULE_TYPE_VALIDATOR} from "modulekit/external/ERC7579.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AnonAadhaarRecoveryFactory} from "src/AnonAadhaarRecoveryFactory.sol";
-import {AnonAadhaarRecoveryManager} from "src/AnonAadhaarRecoveryManager.sol";
+import {AnonAadhaarRecoveryFactory} from "src/anon-aadhaar/AnonAadhaarRecoveryFactory.sol";
+import {AnonAadhaarRecoveryManager} from "src/anon-aadhaar/AnonAadhaarRecoveryManager.sol";
 import {OwnableValidator} from "src/test/OwnableValidator.sol";
 import {IntegrationBase} from "../IntegrationBase.t.sol";
 

@@ -4,12 +4,10 @@
 // import {DKIMRegistry} from "@zk-email/contracts/DKIMRegistry.sol";
 // import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-// import {IRecoveryValidator} from "./interfaces/IRecoveryValidator.sol";
-// import {Groth16Verifier} from "ether-email-auth/packages/contracts/src/utils/Verifier.sol";
-// // TODO: import and use global zkEmail verifier
-// //https://github.com/zkemail/ether-email-auth/blob/main/packages/contracts/src/utils/Verifier.sol
+// import {IRecoveryValidator} from "../interfaces/IRecoveryValidator.sol";
+// import {Groth16Verifier} from "ether-email-auth/packages/contracts/src/utils/Groth16Verifier.sol";
 
-// contract EmailApprover is Initializable, UUPSUpgradeable, IRecoveryValidator {
+// contract EmailValidator is Initializable, UUPSUpgradeable, IRecoveryValidator {
 //     DKIMRegistry public immutable dkimRegistry;
 //     Groth16Verifier public immutable verifier;
 //     bytes32 public senderCommitment;
@@ -67,10 +65,6 @@
 //         bytes32 hash,
 //         bytes memory signature
 //     ) external view returns (bytes4 magicValue) {
-//         if (signature.length == 0) {
-//             return approved[hash] ? EIP1271_MAGICVALUE : EIP1271_INVALID_ID;
-//         }
-
 //         // decode signature
 //         (
 //             uint256[8] memory proof,
@@ -79,7 +73,7 @@
 //         ) = abi.decode(signature, (uint256[8], bytes32, bytes32));
 //         return
 //             _isValidProof(proof, pubkeyHash, senderDomainHash, hash)
-//                 ? EIP1271_MAGICVALUE
+//                 ? EIP1271_MAGIC_VALUE
 //                 : EIP1271_INVALID_ID;
 //     }
 

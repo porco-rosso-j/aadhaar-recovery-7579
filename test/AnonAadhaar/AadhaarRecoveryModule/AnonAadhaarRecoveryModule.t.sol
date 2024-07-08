@@ -5,8 +5,8 @@ import {console2} from "forge-std/console2.sol";
 import {ModuleKitHelpers, ModuleKitUserOp} from "modulekit/ModuleKit.sol";
 import {MODULE_TYPE_EXECUTOR, MODULE_TYPE_VALIDATOR} from "modulekit/external/ERC7579.sol";
 
-import {IAnonAadhaarRecoveryManager} from "src/interfaces/IAnonAadhaarRecoveryManager.sol";
-import {GuardianStorage, GuardianStatus} from "src/libraries/EnumerableGuardianMap.sol";
+import {IAnonAadhaarRecoveryManager} from "src/anon-aadhaar/interfaces/IAnonAadhaarRecoveryManager.sol";
+import {GuardianStorage, GuardianStatus} from "src/anon-aadhaar/libraries/EnumerableGuardianMap.sol";
 import {OwnableValidator} from "src/test/OwnableValidator.sol";
 
 import {OwnableValidatorRecovery_AnonAadhaarRecoveryModule_Base} from "./AnonAadhaarRecoveryModuleBase.t.sol";
